@@ -1,4 +1,3 @@
-// controller/invoice_controller.go
 package controller
 
 import (
@@ -16,10 +15,8 @@ func NewInvoiceController(useCase usecase.InvoiceUseCase) *InvoiceController {
 	}
 }
 
-func (c *InvoiceController) CreateInvoice(subject string, issue_date string, due_date string, address string, customer string, items string, qty int, price float64, amount float64, status int) error {
-	// Additional processing, input validation, etc.
-	// Call use case to perform business logic
-	return c.useCase.CreateInvoice(subject, issue_date, due_date, address, customer, items, qty, price, amount, status)
+func (c *InvoiceController) CreateInvoice(subject string, issue_date string, due_date string, address string, customer string, items []model.InvoiceItem, total_items int, sub_total float64, grand_total float64, status int) error {
+	return c.useCase.CreateInvoice(subject, issue_date, due_date, address, customer, items, total_items, sub_total, grand_total, status)
 }
 
 func (c *InvoiceController) GetAllInvoices() ([]*model.Invoice, error) {

@@ -1,4 +1,3 @@
-// usecase/invoice_usecase.go
 package usecase
 
 import (
@@ -7,7 +6,7 @@ import (
 )
 
 type InvoiceUseCase interface {
-	CreateInvoice(subject string, issue_date string, due_date string, address string, customer string, items string, qty int, price float64, amount float64, status int) error
+	CreateInvoice(subject string, issue_date string, due_date string, address string, customer string, items []model.InvoiceItem, total_items int, sub_total float64, grand_total float64, status int) error
 }
 
 type invoiceUseCase struct {
@@ -17,22 +16,19 @@ func NewInvoiceUseCase() InvoiceUseCase {
 	return &invoiceUseCase{}
 }
 
-func (uc *invoiceUseCase) CreateInvoice(subject string, issue_date string, due_date string, address string, customer string, items string, qty int, price float64, amount float64, status int) error {
-	// Business logic, validation, etc.
-	// You can add more complex business logic here
-
+func (uc *invoiceUseCase) CreateInvoice(subject string, issue_date string, due_date string, address string, customer string, items []model.InvoiceItem, total_items int, sub_total float64, grand_total float64, status int) error {
 	// Create an Invoice object
 	invoice := &model.Invoice{
-		Subject:   subject,
-		IssueDate: issue_date,
-		DueDate:   due_date,
-		Address:   address,
-		Customer:  customer,
-		Items:     items,
-		Qty:       qty,
-		Price:     price,
-		Amount:    amount,
-		Status:    status,
+		Subject:    subject,
+		IssueDate:  issue_date,
+		DueDate:    due_date,
+		Address:    address,
+		Customer:   customer,
+		Items:      items,
+		TotalItems: total_items,
+		SubTotal:   sub_total,
+		GrandTotal: grand_total,
+		Status:     status,
 	}
 
 	// Call repository to store the invoice in the database

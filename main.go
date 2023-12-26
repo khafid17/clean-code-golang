@@ -17,7 +17,7 @@ func main() {
 	}
 	defer database.DB.Close()
 
-	// Initialize use case and controller
+	// Initialize usecase and controller
 	invoiceUseCase := usecase.NewInvoiceUseCase()
 	invoiceController := controller.NewInvoiceController(invoiceUseCase)
 
@@ -25,7 +25,7 @@ func main() {
 	invoiceHandler := hendler.NewInvoiceHandler(invoiceController)
 
 	// Setup HTTP routes
-	http.HandleFunc("/api/invoice", invoiceHandler.GetAllInvoicesHandler)
+	http.HandleFunc("/api/invoices", invoiceHandler.GetAllInvoicesHandler)
 	http.HandleFunc("/api/invoice/form", invoiceHandler.FormInvoiceHandler)
 	http.HandleFunc("/api/invoice/create", invoiceHandler.CreateInvoiceHandler)
 

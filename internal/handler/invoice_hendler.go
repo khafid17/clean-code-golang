@@ -3,6 +3,7 @@ package hendler
 import (
 	"encoding/json"
 	"esb/internal/controller"
+	model "esb/internal/model/entity"
 	"esb/internal/model/web"
 	"net/http"
 )
@@ -26,22 +27,39 @@ func (h *InvoiceHandler) CreateInvoiceHandler(w http.ResponseWriter, r *http.Req
 
 	defer r.Body.Close()
 
-	// Convert items to a JSON string
-	itemsJSON, err := json.Marshal(request.Items)
+	var subTotal, grandTotal float64
+	var items []model.InvoiceItem
+	for _, itemReq := range request.Items {
+		amount := itemReq.Qty * itemReq.Price
+		item := model.InvoiceItem{
+			Qty:    itemReq.Qty,
+			Price:  itemReq.Price,
+			Amount: amount,
+		}
+		items = append(items, item)
+		subTotal += amount
+	}
+
+	tax := (request.Items[0].Tax / 100) * subTotal
+	grandTotal = tax + subTotal
+
+	err := h.controller.CreateInvoice(request.Subject, request.IssueDate, request.DueDate, request.Address, request.Customer, items, len(items), subTotal, grandTotal, request.Status)
 	if err != nil {
-		http.Error(w, "Error convert", http.StatusInternalServerError)
+		http.Error(w, "Error create data", http.StatusInternalServerError)
 		return
 	}
-	itemsString := string(itemsJSON)
-
-	err = h.controller.CreateInvoice(request.Subject, request.IssueDate, request.DueDate, request.Address, request.Customer, itemsString, request.Qty, request.Price, request.Amount, request.Status)
 
 	response := web.InvoiceResponse{
 		Status:  "success",
 		Message: "Invoice created successfully",
+		InvoiceSummary: web.InvoiceSummary{
+			TotalItems: len(items),
+			SubTotal:   subTotal,
+			Tax:        request.Items[0].Tax,
+			GrandTotal: grandTotal,
+		},
 	}
 
-	// Mengubah respons ke format JSON
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(response)
@@ -54,14 +72,12 @@ func (h *InvoiceHandler) GetAllInvoicesHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	// Buat respons JSON untuk data invoices
 	response := web.InvoiceGetAllResponse{
 		Status:  "success",
 		Message: "Invoice get all successfully",
 		Data:    invoices,
 	}
 
-	// Mengubah respons ke format JSON
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
@@ -75,7 +91,6 @@ func (h *InvoiceHandler) FormInvoiceHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	// Buat respons JSON untuk data invoices
 	response := web.InvoiceFormResponse{
 		Status:   "success",
 		Message:  "Invoice get all successfully",
@@ -83,7 +98,6 @@ func (h *InvoiceHandler) FormInvoiceHandler(w http.ResponseWriter, r *http.Reque
 		Items:    items,
 	}
 
-	// Mengubah respons ke format JSON
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
