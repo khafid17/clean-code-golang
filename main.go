@@ -4,10 +4,11 @@ import (
 	"log"
 	"net/http"
 
-	"esb/internal/controller"
+	"esb/internal/controller/invoicecontroller"
 	"esb/internal/database"
-	"esb/internal/handler"
-	"esb/internal/usecase"
+	hendler "esb/internal/handler"
+	"esb/internal/repository/invoicerepository"
+	"esb/internal/usecase/invoiceusecase"
 )
 
 func main() {
@@ -17,9 +18,11 @@ func main() {
 	}
 	defer database.DB.Close()
 
+	invoiceRepository := invoicerepository.NewInvoiceRepository()
+
 	// Initialize usecase and controller
-	invoiceUseCase := usecase.NewInvoiceUseCase()
-	invoiceController := controller.NewInvoiceController(invoiceUseCase)
+	invoiceUseCase := invoiceusecase.NewInvoiceUseCase(invoiceRepository)
+	invoiceController := invoicecontroller.NewInvoiceController(invoiceUseCase)
 
 	// Initialize HTTP handler
 	invoiceHandler := hendler.NewInvoiceHandler(invoiceController)

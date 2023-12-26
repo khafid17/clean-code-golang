@@ -9,10 +9,10 @@ import (
 )
 
 type InvoiceHandler struct {
-	controller *controller.InvoiceController
+	controller controller.InvoiceController
 }
 
-func NewInvoiceHandler(controller *controller.InvoiceController) *InvoiceHandler {
+func NewInvoiceHandler(controller controller.InvoiceController) *InvoiceHandler {
 	return &InvoiceHandler{controller: controller}
 }
 
