@@ -1,3 +1,5 @@
+![design](https://github.com/khafid17/clean-code-golang/assets/61268547/8a067724-8d43-40ef-aab9-e497710e473a)
+
 1. External system perform request (HTTP, Messaging, etc)
 2. The Handler creates various Model from request data
 3. The Handler calls Controller, and execute it using Model data
