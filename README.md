@@ -1,12 +1,14 @@
-External system perform request (HTTP, Messaging, etc)
-The Handler creates various Model from request data
-The Handler calls Controller, and execute it using Model data
-The Usecase create Entity data for the business logic
-The Usecase calls Repository, and execute it using Entity data
-The Repository use Entity data to perform database operation
-The Repository perform database operation to the database
-The Gateway using Model data to construct request to external system
-The Gateway perform request to external system (HTTP, Messaging, etc)
+![design](https://github.com/khafid17/clean-code-golang/assets/61268547/8a067724-8d43-40ef-aab9-e497710e473a)
+
+1. External system perform request (HTTP, Messaging, etc)
+2. The Handler creates various Model from request data
+3. The Handler calls Controller, and execute it using Model data
+4. The Usecase create Entity data for the business logic
+5. The Usecase calls Repository, and execute it using Entity data
+6. The Repository use Entity data to perform database operation
+7. The Repository perform database operation to the database
+8. The Gateway using Model data to construct request to external system
+9. The Gateway perform request to external system (HTTP, Messaging, etc)
 
 Invoice Rest API can 3 endpoit
 1. Form Input
